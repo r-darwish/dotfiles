@@ -1,0 +1,7 @@
+{{ if ne .chezmoi.os "darwin" }}
+Library/Application Support
+{{ end }}
+
+{{ if eq .chezmoi.os "darwin" }}
+.config/lazygit
+{{ end }}
