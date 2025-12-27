@@ -1,3 +1,53 @@
 {{ if ne .chezmoi.os "windows" }}
 AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
 {{ end }}
+
+# Ignore Windows-specific paths on non-Windows
+{{ if ne .chezmoi.os "windows" }}
+AppData/
+{{ end }}
+
+# Ignore macOS-specific paths on non-macOS
+{{ if ne .chezmoi.os "darwin" }}
+.hammerspoon/
+Library/
+{{ end }}
+
+# Ignore Linux .config paths on non-Linux (except starship and zellij which work on all Unix)
+{{ if ne .chezmoi.os "linux" }}
+.config/btop/
+.config/ghostty/
+.config/lazygit/
+.config/k9s/
+{{ end }}
+
+# Ignore Unix-only bin scripts on Windows
+{{ if eq .chezmoi.os "windows" }}
+.local/bin/clip
+.local/bin/xdg-open
+{{ end }}
+
+# macOS: Use Library paths, ignore .config paths (except starship and zellij)
+{{ if eq .chezmoi.os "darwin" }}
+.config/btop/
+.config/ghostty/
+.config/lazygit/
+.config/k9s/
+{{ end }}
+
+# btop and zellij not supported on Windows
+{{ if eq .chezmoi.os "windows" }}
+AppData/Local/btop/
+AppData/Local/zellij/
+.config/zellij/
+{{ end }}
+
+# Ignore sh bootstrap script on Windows (target path)
+{{ if eq .chezmoi.os "windows" }}
+bootstrap.sh
+{{ end }}
+
+# Ignore ps1 bootstrap script on Unix (target path)
+{{ if ne .chezmoi.os "windows" }}
+bootstrap.ps1
+{{ end }}

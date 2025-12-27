@@ -1,0 +1,83 @@
+#!/usr/bin/env python3
+
+import argparse
+import os
+import subprocess
+
+GITLOG_PATH = os.path.abspath(__file__)
+
+USAGE_DOC = """
+Usage:
+    gitlog [--opencommitlink <shorthash>] [<git-log-options>...]
+
+Examples:
+    gitlog --all
+    gitlog --since="2 weeks ago" --author="John Doe"
+    gitlog --opencommitlink abc1234
+"""
+
+
+def gitlog(*args: str) -> None:
+    git_cmd = [
+        "git",
+        "log",
+        "--graph",
+        "--color=always",
+        "--format=%C(auto)%h%d %s %C(bold green)%ar %C(dim white)%an",
+    ] + list(args or [])
+
+    # Usage:
+    # -   ctrl-m: page the commit
+    # -   ctrl-l: open the commit link
+    # See [ref](https://gist.github.com/junegunn/f4fca918e937e6bf5bad?permalink_comment_id=2731105#gistcomment-2731105)
+    fzf_cmd = [
+        "fzf",
+        "--ansi",
+        "--no-sort",
+        "--reverse",
+        "--tiebreak=index",
+        "--no-multi",
+        "--preview",
+        'f() { set -- $(echo -- "$@" | grep -o "[a-f0-9]\\{7\\}"); [ $# -eq 0 ] || git show --color=always $1 | delta; }; f {}',
+        "--preview-window=up:60%",
+        "--bind",
+        "ctrl-j:down,ctrl-k:up",
+        "--bind",
+        "ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up",
+        "--bind",
+        "ctrl-n:preview-down,ctrl-p:preview-up",
+        "--bind",
+        "alt-f:preview-page-down,alt-b:preview-page-up",
+        "--bind",
+        "ctrl-/:toggle-preview",
+        "--bind",
+        "ctrl-w:track+clear-query",
+        "--bind",
+        "ctrl-m:execute:(echo {} | grep -o \"[a-f0-9]\\{7\\}\" | head -1 | xargs -I @ sh -c 'git show @ | nvim')",
+        "--bind",
+        'ctrl-b:execute:(echo {} | grep -o "[a-f0-9]\\{7\\}" | head -1 | xargs -I @ gh browse @)',
+        "--bind",
+        'ctrl-y:execute:(echo {} | grep -o "[a-f0-9]\\{7\\}" | head -1 | clip)',
+    ]
+
+    # Run git log command and pipe to fzf
+    process = subprocess.Popen(
+        git_cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL
+    )
+    subprocess.run(fzf_cmd, stdin=process.stdout)
+    process.wait()
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="A script to display git logs and open commit links.",
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog=USAGE_DOC,
+    )
+    known_args, other_args = parser.parse_known_args()
+
+    gitlog(*other_args)
+
+
+if __name__ == "__main__":
+    main()

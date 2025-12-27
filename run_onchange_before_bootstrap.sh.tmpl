@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+# hash: {{ include "run_onchange_before_bootstrap.sh.tmpl" | sha256sum }}
+
+set -e
+
+echo "==> Starting bootstrap for {{ .chezmoi.os }}..."
+
+# Install Homebrew on Linux if needed
+{{ if eq .chezmoi.os "linux" -}}
+if ! type "brew" >/dev/null 2>&1; then
+    echo "==> Installing Homebrew..."
+    if ! type "gcc" >/dev/null 2>&1; then
+        sudo apt-get update && sudo apt-get install -y build-essential
+    fi
+    if [[ ! -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+        curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash
+    fi
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+{{ end -}}
+
+# Install packages via Homebrew
+if type "brew" >/dev/null 2>&1; then
+    echo "==> Installing Homebrew packages..."
+    brew install git-delta btop npm yazi starship fzf neovim zellij fd ripgrep gh lazygit gum zoxide fish lsd go node
+    brew tap go-task/tap
+    brew install go-task
+fi
+
+{{ if eq .chezmoi.os "linux" -}}
+# Arch Linux specific packages
+if type "pacman" >/dev/null 2>&1; then
+    echo "==> Installing Arch Linux packages..."
+    sudo pacman -S --needed base-devel fd fzf git github-cli go htop btop lazygit neovim nodejs npm fish python ripgrep starship tmux unzip uv yazi zoxide zellij vivid ghostty-terminfo gum lsd git-delta
+    
+    # Install yay if not present
+    if ! type "yay" >/dev/null 2>&1; then
+        echo "==> Installing yay..."
+        sudo pacman -S --needed --noconfirm git base-devel
+        git clone https://aur.archlinux.org/yay.git /tmp/yay
+        pushd /tmp/yay
+        makepkg -si
+        popd
+        rm -rf /tmp/yay
+    fi
+fi
+{{ end -}}
+
+# Clone nvim config (all Unix systems)
+echo "==> Setting up nvim..."
+[[ -d "$HOME/.config/nvim" ]] || git clone https://github.com/r-darwish/nvim "$HOME/.config/nvim"
+
+# Clone fish config (Unix only)
+echo "==> Setting up fish..."
+[[ -d "$HOME/.config/fish" ]] || git clone https://github.com/r-darwish/fish "$HOME/.config/fish"
+
+# Wiz-specific repos (if directory exists)
+if [[ -d "$HOME/wiz-sec" ]]; then
+    echo "==> Setting up wiz-sec repos..."
+    [[ -d "$HOME/wiz-sec/darwish" ]] || git clone https://github.com/wiz-sec/darwish "$HOME/wiz-sec/darwish"
+    [[ -d "$HOME/wiz-sec/dotfiles" ]] || git clone https://github.com/wiz-sec/dotfiles "$HOME/wiz-sec/dotfiles"
+fi
+
+# Generate shell configurations (converted from bootstrap.fish)
+echo "==> Generating shell configurations..."
+gen_file="$HOME/.gen.fish"
+
+echo "" > "$gen_file"
+if type starship >/dev/null 2>&1; then
+    starship init fish >> "$gen_file"
+    echo "" >> "$gen_file"
+fi
+
+if type zoxide >/dev/null 2>&1; then
+    zoxide init fish >> "$gen_file"
+    echo "" >> "$gen_file"
+fi
+
+if type vivid >/dev/null 2>&1; then
+    echo "export LS_COLORS='$(vivid generate tokyonight-night)'" >> "$gen_file"
+    echo "" >> "$gen_file"
+fi
+
+if [[ -d "$HOME/wiz-sec/darwish" ]]; then
+    echo "source $HOME/wiz-sec/darwish/config.fish" >> "$gen_file"
+fi
+
+echo "==> Bootstrap complete!"

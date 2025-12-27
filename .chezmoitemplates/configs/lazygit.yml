@@ -1,0 +1,57 @@
+quitOnTopLevelReturn: true
+os:
+  editPreset: nvim
+gui:
+  nerdFontsVersion: "3"
+  skipStashWarning: true
+  theme:
+    activeBorderColor:
+      - "#ff966c"
+      - "bold"
+    inactiveBorderColor:
+      - "#589ed7"
+    searchingActiveBorderColor:
+      - "#ff966c"
+      - "bold"
+    optionsTextColor:
+      - "#82aaff"
+    selectedLineBgColor:
+      - "#2d3f76"
+    cherryPickedCommitFgColor:
+      - "#82aaff"
+    cherryPickedCommitBgColor:
+      - "#c099ff"
+    markedBaseCommitFgColor:
+      - "#82aaff"
+    markedBaseCommitBgColor:
+      - "#ffc777"
+    unstagedChangesColor:
+      - "#c53b53"
+    defaultFgColor:
+      - "#c8d3f5"
+customCommands:
+  - key: 'J'
+    command: "get-tickets"
+    context: 'files'
+    description: 'Show my tickets'
+    output: terminal
+  - key: '<c-j>'
+    command: "get-tickets {{`{{.SelectedFile.Name}}`}}"
+    context: 'files'
+    description: 'Show file tickets'
+    output: terminal
+  - key: "<c-p>"
+    command: "bash -c 'git push && gh pr create --fill-first --web'"
+    context: "localBranches"
+  - key: "G"
+    command: "fish -c 'o git-gc.py'"
+    context: "localBranches"
+  - key: "I"
+    command: "fish -c 'o wait-for-circle.py --download-logs'"
+    context: "global"
+git:
+  pagers:
+    - colorArg: always
+      pager: delta --paging=never
+  autoFetch: false
+  autoRefresh: false
