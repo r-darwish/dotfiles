@@ -38,8 +38,12 @@
   "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
   "keybindings": [
     {
-      "keys": "shift+enter",
-      "id": "User.sendInput.ShiftEnterCustom"
+      "id": "User.sendInput.ShiftEnterCustom",
+      "keys": "shift+enter"
+    },
+    {
+      "id": "User.splitPane.A6751878",
+      "keys": "alt+shift+d"
     },
     {
       "id": null,
@@ -52,10 +56,6 @@
     {
       "id": "User.find",
       "keys": "ctrl+shift+f"
-    },
-    {
-      "id": "User.splitPane.A6751878",
-      "keys": "alt+shift+d"
     }
   ],
   "launchMode": "maximized",
@@ -71,7 +71,7 @@
       "colorScheme": "Tokyo Night",
       "font": {
         "cellHeight": "1.2",
-        "face": "Maple Mono NF",
+        "face": "CaskaydiaCove Nerd Font Mono",
         "size": 11,
         "weight": "semi-bold"
       },
@@ -91,23 +91,6 @@
         "name": "Command Prompt"
       },
       {
-        "guid": "{2c4de342-38b7-51cf-b940-2309a097f518}",
-        "hidden": true,
-        "name": "Ubuntu",
-        "source": "Windows.Terminal.Wsl"
-      },
-      {
-        "colorScheme": "Tokyo Night",
-        "commandline": "C:\\WINDOWS\\system32\\wsl.exe --distribution-id {903b1dfb-59b0-4252-9a02-cf3f9ee27641} --cd ~ nu",
-        "font": {
-          "face": "CaskaydiaCove Nerd Font Mono"
-        },
-        "guid": "{1122b4d0-692a-5cf8-9ace-8784c0f31ba2}",
-        "hidden": false,
-        "name": "NixOS",
-        "source": "Microsoft.WSL"
-      },
-      {
         "bellStyle": "none",
         "guid": "{21081230-19c2-5240-9614-0849976c4316}",
         "hidden": false,
@@ -125,12 +108,6 @@
         "hidden": false,
         "name": "PowerShell",
         "source": "Windows.Terminal.PowershellCore"
-      },
-      {
-        "guid": "{b453ae62-4e3d-5e58-b989-0a998ec441b8}",
-        "hidden": false,
-        "name": "Azure Cloud Shell",
-        "source": "Windows.Terminal.Azure"
       }
     ]
   },
