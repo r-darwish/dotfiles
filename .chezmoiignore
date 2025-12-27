@@ -13,7 +13,9 @@ AppData/
 Library/
 {{ end }}
 
-# Ignore Linux .config paths on non-Linux (except starship and zellij which work on all Unix)
+# Ignore Linux-only .config paths on non-Linux
+# Note: starship.toml works on ALL platforms (Windows, macOS, Linux) - not ignored
+# Note: zellij works on Unix only (macOS, Linux) - ignored on Windows below
 {{ if ne .chezmoi.os "linux" }}
 .config/btop/
 .config/ghostty/
@@ -27,15 +29,13 @@ Library/
 .local/bin/xdg-open
 {{ end }}
 
-# macOS: Use Library paths, ignore .config paths (except starship and zellij)
+# macOS: Use Library paths instead of .config paths for most apps
+# (starship uses .config on all platforms; zellij uses .config on Unix)
 {{ if eq .chezmoi.os "darwin" }}
-.config/btop/
-.config/ghostty/
-.config/lazygit/
-.config/k9s/
+# btop, ghostty, lazygit, k9s already ignored above via non-Linux condition
 {{ end }}
 
-# btop and zellij not supported on Windows
+# Windows: Ignore Unix-only tools
 {{ if eq .chezmoi.os "windows" }}
 AppData/Local/btop/
 AppData/Local/zellij/
