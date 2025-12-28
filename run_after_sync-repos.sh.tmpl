@@ -61,4 +61,10 @@ if [[ -d "$HOME/wiz-sec/darwish" ]]; then
 fi
 
 echo "==> Sync complete!"
+
+# Initialize nvim plugins (LazyVim)
+if type nvim >/dev/null 2>&1; then
+    echo "==> Initializing nvim plugins..."
+    nvim --headless "+Lazy! sync" +qa >/dev/null 2>&1
+fi
 {{ end -}}

@@ -34,4 +34,10 @@ if (-not (Test-Path $pwshConfigDir)) {
 Sync-Repo "https://github.com/r-darwish/PowerShell" $pwshConfigDir
 
 Write-Host "==> Repository sync complete!"
+
+# Initialize nvim plugins (LazyVim)
+if (Get-Command nvim -ErrorAction SilentlyContinue) {
+    Write-Host "==> Initializing nvim plugins..."
+    nvim --headless "+Lazy! sync" +qa >$null 2>&1
+}
 {{ end -}}
