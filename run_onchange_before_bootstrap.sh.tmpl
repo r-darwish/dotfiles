@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # hash: {{ include "run_onchange_before_bootstrap.sh.tmpl" | sha256sum }}
-
+{{ if ne .chezmoi.os "windows" -}}
 set -e
 
 echo "==> Starting bootstrap for {{ .chezmoi.os }}..."
@@ -46,43 +46,5 @@ if type "pacman" >/dev/null 2>&1; then
 fi
 {{ end -}}
 
-# Clone nvim config (all Unix systems)
-echo "==> Setting up nvim..."
-[[ -d "$HOME/.config/nvim" ]] || git clone https://github.com/r-darwish/nvim "$HOME/.config/nvim"
-
-# Clone fish config (Unix only)
-echo "==> Setting up fish..."
-[[ -d "$HOME/.config/fish" ]] || git clone https://github.com/r-darwish/fish "$HOME/.config/fish"
-
-# Wiz-specific repos (if directory exists)
-if [[ -d "$HOME/wiz-sec" ]]; then
-    echo "==> Setting up wiz-sec repos..."
-    [[ -d "$HOME/wiz-sec/darwish" ]] || git clone https://github.com/wiz-sec/darwish "$HOME/wiz-sec/darwish"
-    [[ -d "$HOME/wiz-sec/dotfiles" ]] || git clone https://github.com/wiz-sec/dotfiles "$HOME/wiz-sec/dotfiles"
-fi
-
-# Generate shell configurations (converted from bootstrap.fish)
-echo "==> Generating shell configurations..."
-gen_file="$HOME/.gen.fish"
-
-echo "" > "$gen_file"
-if type starship >/dev/null 2>&1; then
-    starship init fish >> "$gen_file"
-    echo "" >> "$gen_file"
-fi
-
-if type zoxide >/dev/null 2>&1; then
-    zoxide init fish >> "$gen_file"
-    echo "" >> "$gen_file"
-fi
-
-if type vivid >/dev/null 2>&1; then
-    echo "export LS_COLORS='$(vivid generate tokyonight-night)'" >> "$gen_file"
-    echo "" >> "$gen_file"
-fi
-
-if [[ -d "$HOME/wiz-sec/darwish" ]]; then
-    echo "source $HOME/wiz-sec/darwish/config.fish" >> "$gen_file"
-fi
-
 echo "==> Bootstrap complete!"
+{{ end -}}

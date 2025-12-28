@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# Sync git repositories - clone if missing, pull if exists
+{{ if ne .chezmoi.os "windows" -}}
+set -e
+
+echo "==> Syncing git repositories..."
+
+# Helper function to clone or pull a repo
+sync_repo() {
+    local repo_url="$1"
+    local target_dir="$2"
+
+    if [[ -d "$target_dir/.git" ]]; then
+        echo "  Updating $target_dir..."
+        git -C "$target_dir" pull --ff-only
+    elif [[ -d "$target_dir" ]]; then
+        echo "  Directory $target_dir exists but is not a git repo, skipping..."
+    else
+        echo "  Cloning $repo_url to $target_dir..."
+        git clone "$repo_url" "$target_dir"
+    fi
+}
+
+# Sync nvim config
+sync_repo "https://github.com/r-darwish/nvim" "$HOME/.config/nvim"
+
+# Sync fish config
+sync_repo "https://github.com/r-darwish/fish" "$HOME/.config/fish"
+
+# Sync wiz-sec repos (only if wiz-sec directory exists)
+if [[ -d "$HOME/wiz-sec" ]]; then
+    echo "==> Syncing wiz-sec repos..."
+    sync_repo "https://github.com/wiz-sec/darwish" "$HOME/wiz-sec/darwish"
+    sync_repo "https://github.com/wiz-sec/dotfiles" "$HOME/wiz-sec/dotfiles"
+fi
+
+echo "==> Repository sync complete!"
+
+# Generate shell configurations (needs to run after repos are synced)
+echo "==> Generating shell configurations..."
+gen_file="$HOME/.gen.fish"
+
+echo "" >"$gen_file"
+if type starship >/dev/null 2>&1; then
+    starship init fish >>"$gen_file"
+    echo "" >>"$gen_file"
+fi
+
+if type zoxide >/dev/null 2>&1; then
+    zoxide init fish >>"$gen_file"
+    echo "" >>"$gen_file"
+fi
+
+if type vivid >/dev/null 2>&1; then
+    echo "export LS_COLORS='$(vivid generate tokyonight-night)'" >>"$gen_file"
+    echo "" >>"$gen_file"
+fi
+
+if [[ -d "$HOME/wiz-sec/darwish" ]]; then
+    echo "source $HOME/wiz-sec/darwish/config.fish" >>"$gen_file"
+fi
+
+echo "==> Sync complete!"
+{{ end -}}

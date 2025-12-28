@@ -1,0 +1,37 @@
+{{ if eq .chezmoi.os "windows" -}}
+Write-Host "==> Syncing git repositories..."
+
+# Helper function to clone or pull a repo
+function Sync-Repo {
+    param(
+        [string]$RepoUrl,
+        [string]$TargetDir
+    )
+
+    if (Test-Path (Join-Path $TargetDir ".git")) {
+        Write-Host "  Updating $TargetDir..."
+        git -C $TargetDir pull --ff-only
+    } elseif (Test-Path $TargetDir) {
+        Write-Host "  Directory $TargetDir exists but is not a git repo, skipping..."
+    } else {
+        Write-Host "  Cloning $RepoUrl to $TargetDir..."
+        git clone $RepoUrl $TargetDir
+    }
+}
+
+# Sync nvim config
+$nvimConfigDir = "$env:LOCALAPPDATA\nvim"
+Sync-Repo "https://github.com/r-darwish/nvim" $nvimConfigDir
+
+# Sync PowerShell config
+$pwshProfilePath = pwsh.exe -NoProfile -Command "echo `$PROFILE"
+$pwshConfigDir = Split-Path $pwshProfilePath
+
+if (-not (Test-Path $pwshConfigDir)) {
+    New-Item -ItemType Directory -Path $pwshConfigDir -Force | Out-Null
+}
+
+Sync-Repo "https://github.com/r-darwish/PowerShell" $pwshConfigDir
+
+Write-Host "==> Repository sync complete!"
+{{ end -}}
