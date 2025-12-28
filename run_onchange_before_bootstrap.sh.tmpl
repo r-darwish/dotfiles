@@ -5,27 +5,7 @@ set -e
 
 echo "==> Starting bootstrap for {{ .chezmoi.os }}..."
 
-# Install Homebrew on Linux if needed
-{{ if eq .chezmoi.os "linux" -}}
-if ! type "brew" >/dev/null 2>&1; then
-    echo "==> Installing Homebrew..."
-    if ! type "gcc" >/dev/null 2>&1; then
-        sudo apt-get update && sudo apt-get install -y build-essential
-    fi
-    if [[ ! -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
-        curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash
-    fi
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-fi
-{{ end -}}
 
-# Install packages via Homebrew
-if type "brew" >/dev/null 2>&1; then
-    echo "==> Installing Homebrew packages..."
-    brew install git-delta btop npm yazi starship fzf neovim zellij fd ripgrep gh lazygit gum zoxide fish lsd go node chezmoi
-    brew tap go-task/tap
-    brew install go-task
-fi
 
 {{ if eq .chezmoi.os "linux" -}}
 # Arch Linux specific packages
@@ -43,8 +23,28 @@ if type "pacman" >/dev/null 2>&1; then
         popd
         rm -rf /tmp/yay
     fi
+else
+    # Install Homebrew on Linux if needed
+    if ! type "brew" >/dev/null 2>&1; then
+        echo "==> Installing Homebrew..."
+        if ! type "gcc" >/dev/null 2>&1; then
+            sudo apt-get update && sudo apt-get install -y build-essential
+        fi
+        if [[ ! -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+            curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash
+        fi
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    fi
 fi
 {{ end -}}
+
+# Install packages via Homebrew
+if type "brew" >/dev/null 2>&1; then
+    echo "==> Installing Homebrew packages..."
+    brew install git-delta btop npm yazi starship fzf neovim zellij fd ripgrep gh lazygit gum zoxide fish lsd go node chezmoi
+    brew tap go-task/tap
+    brew install go-task
+fi
 
 echo "==> Bootstrap complete!"
 {{ end -}}
