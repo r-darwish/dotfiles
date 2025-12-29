@@ -9,7 +9,6 @@ function Write-Message {
 # Function to print sub-messages with blue arrow
 function Write-SubMessage {
     param([string]$Message)
-    Write-Host -NoNewline "  "
     Write-Host -NoNewline -ForegroundColor Blue "$([char]27)[1m==>$([char]27)[0m "
     Write-Host "$Message"
 }
