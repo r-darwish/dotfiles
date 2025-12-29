@@ -11,6 +11,13 @@ print_msg() {
     echo -e "${green_bold}==>${reset} ${bold}$1${reset}"
 }
 
+# Function to print sub-messages with blue arrow
+print_sub_msg() {
+    local blue_bold='\033[1;34m'
+    local reset='\033[0m'
+    echo -e "  ${blue_bold}==>${reset} $1"
+}
+
 print_msg "Starting bootstrap for {{ .chezmoi.os }}..."
 
 {{ if eq .chezmoi.os "linux" -}}

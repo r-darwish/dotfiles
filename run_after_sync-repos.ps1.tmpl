@@ -6,6 +6,14 @@ function Write-Message {
     Write-Host "$([char]27)[1m$Message$([char]27)[0m"
 }
 
+# Function to print sub-messages with blue arrow
+function Write-SubMessage {
+    param([string]$Message)
+    Write-Host -NoNewline "  "
+    Write-Host -NoNewline -ForegroundColor Blue "$([char]27)[1m==>$([char]27)[0m "
+    Write-Host "$Message"
+}
+
 Write-Message "Syncing git repositories..."
 
 # Helper function to clone or pull a repo
@@ -16,12 +24,12 @@ function Sync-Repo {
     )
 
     if (Test-Path (Join-Path $TargetDir ".git")) {
-        Write-Host "  Updating $TargetDir..."
+        Write-SubMessage "Updating $TargetDir..."
         git -C $TargetDir pull --ff-only
     } elseif (Test-Path $TargetDir) {
-        Write-Host "  Directory $TargetDir exists but is not a git repo, skipping..."
+        Write-SubMessage "Directory $TargetDir exists but is not a git repo, skipping..."
     } else {
-        Write-Host "  Cloning $RepoUrl to $TargetDir..."
+        Write-SubMessage "Cloning $RepoUrl to $TargetDir..."
         git clone $RepoUrl $TargetDir
     }
 }

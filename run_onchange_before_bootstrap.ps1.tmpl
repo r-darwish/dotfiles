@@ -6,6 +6,14 @@ function Write-Message {
     Write-Host "$([char]27)[1m$Message$([char]27)[0m"
 }
 
+# Function to print sub-messages with blue arrow
+function Write-SubMessage {
+    param([string]$Message)
+    Write-Host -NoNewline "  "
+    Write-Host -NoNewline -ForegroundColor Blue "$([char]27)[1m==>$([char]27)[0m "
+    Write-Host "$Message"
+}
+
 Write-Message "Starting bootstrap for Windows..."
 
 # Install packages via winget (excluding btop and zellij - not supported on Windows)

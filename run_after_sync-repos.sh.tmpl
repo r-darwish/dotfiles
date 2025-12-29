@@ -11,6 +11,13 @@ print_msg() {
     echo -e "${green_bold}==>${reset} ${bold}$1${reset}"
 }
 
+# Function to print sub-messages with blue arrow
+print_sub_msg() {
+    local blue_bold='\033[1;34m'
+    local reset='\033[0m'
+    echo -e "  ${blue_bold}==>${reset} $1"
+}
+
 print_msg "Syncing git repositories..."
 
 # Helper function to clone or pull a repo
@@ -19,12 +26,12 @@ sync_repo() {
     local target_dir="$2"
 
     if [[ -d "$target_dir/.git" ]]; then
-        echo "  Updating $target_dir..."
+        print_sub_msg "Updating $target_dir..."
         git -C "$target_dir" pull --ff-only
     elif [[ -d "$target_dir" ]]; then
-        echo "  Directory $target_dir exists but is not a git repo, skipping..."
+        print_sub_msg "Directory $target_dir exists but is not a git repo, skipping..."
     else
-        echo "  Cloning $repo_url to $target_dir..."
+        print_sub_msg "Cloning $repo_url to $target_dir..."
         git clone "$repo_url" "$target_dir"
     fi
 }
