@@ -3,7 +3,15 @@
 {{ if ne .chezmoi.os "windows" -}}
 set -e
 
-echo "==> Syncing git repositories..."
+# Function to print formatted messages with green bold arrow and bold text
+print_msg() {
+    local green_bold='\033[1;32m'
+    local bold='\033[1m'
+    local reset='\033[0m'
+    echo -e "${green_bold}==>${reset} ${bold}$1${reset}"
+}
+
+print_msg "Syncing git repositories..."
 
 # Helper function to clone or pull a repo
 sync_repo() {
@@ -29,15 +37,15 @@ sync_repo "https://github.com/r-darwish/fish" "$HOME/.config/fish"
 
 # Sync wiz-sec repos (only if wiz-sec directory exists)
 if [[ -d "$HOME/wiz-sec" ]]; then
-    echo "==> Syncing wiz-sec repos..."
+    print_msg "Syncing wiz-sec repos..."
     sync_repo "https://github.com/wiz-sec/darwish" "$HOME/wiz-sec/darwish"
     sync_repo "https://github.com/wiz-sec/dotfiles" "$HOME/wiz-sec/dotfiles"
 fi
 
-echo "==> Repository sync complete!"
+print_msg "Repository sync complete!"
 
 # Generate shell configurations (needs to run after repos are synced)
-echo "==> Generating shell configurations..."
+print_msg "Generating shell configurations..."
 gen_file="$HOME/.gen.fish"
 
 echo "" >"$gen_file"
@@ -60,11 +68,11 @@ if [[ -d "$HOME/wiz-sec/darwish" ]]; then
     echo "source $HOME/wiz-sec/darwish/config.fish" >>"$gen_file"
 fi
 
-echo "==> Sync complete!"
+print_msg "Sync complete!"
 
 # Initialize nvim plugins (LazyVim)
 if type nvim >/dev/null 2>&1; then
-    echo "==> Initializing nvim plugins..."
+    print_msg "Initializing nvim plugins..."
     nvim --headless "+Lazy! sync" +qa >/dev/null 2>&1
 fi
 {{ end -}}

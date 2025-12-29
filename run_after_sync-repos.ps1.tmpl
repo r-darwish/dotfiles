@@ -1,5 +1,12 @@
 {{ if eq .chezmoi.os "windows" -}}
-Write-Host "==> Syncing git repositories..."
+# Function to print formatted messages with green bold arrow and bold text
+function Write-Message {
+    param([string]$Message)
+    Write-Host -NoNewline -ForegroundColor Green "$([char]27)[1m==>$([char]27)[0m "
+    Write-Host "$([char]27)[1m$Message$([char]27)[0m"
+}
+
+Write-Message "Syncing git repositories..."
 
 # Helper function to clone or pull a repo
 function Sync-Repo {
@@ -33,11 +40,11 @@ if (-not (Test-Path $pwshConfigDir)) {
 
 Sync-Repo "https://github.com/r-darwish/PowerShell" $pwshConfigDir
 
-Write-Host "==> Repository sync complete!"
+Write-Message "Repository sync complete!"
 
 # Initialize nvim plugins (LazyVim)
 if (Get-Command nvim -ErrorAction SilentlyContinue) {
-    Write-Host "==> Initializing nvim plugins..."
+    Write-Message "Initializing nvim plugins..."
     nvim --headless "+Lazy! sync" +qa >$null 2>&1
 }
 {{ end -}}

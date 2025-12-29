@@ -1,14 +1,21 @@
 {{ if eq .chezmoi.os "windows" -}}
-Write-Host "==> Starting bootstrap for Windows..."
+# Function to print formatted messages with green bold arrow and bold text
+function Write-Message {
+    param([string]$Message)
+    Write-Host -NoNewline -ForegroundColor Green "$([char]27)[1m==>$([char]27)[0m "
+    Write-Host "$([char]27)[1m$Message$([char]27)[0m"
+}
+
+Write-Message "Starting bootstrap for Windows..."
 
 # Install packages via winget (excluding btop and zellij - not supported on Windows)
-Write-Host "==> Installing packages via winget..."
+Write-Message "Installing packages via winget..."
 winget install microsoft.powershell Git.Git starship neovim junegunn.fzf lazygit OpenJS.NodeJS peazip yazi sharkdp.fd ripgrep python3 zoxide eza-community.eza dandavison.delta alexx2000.DoubleCommander Microsoft.Sysinternals.Suite
 
 # Install PowerShell modules
-Write-Host "==> Installing PowerShell modules..."
+Write-Message "Installing PowerShell modules..."
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 pwsh -c "Install-Module PSFzf,Microsoft.WinGet.Client,Microsoft.Powershell.ConsoleGuiTools -Force"
 
-Write-Host "==> Bootstrap complete!"
+Write-Message "Bootstrap complete!"
 {{ end -}}
