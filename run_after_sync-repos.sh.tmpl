@@ -1,6 +1,6 @@
+{{ if ne .chezmoi.os "windows" -}}
 #!/usr/bin/env bash
 # Sync git repositories - clone if missing, pull if exists
-{{ if ne .chezmoi.os "windows" -}}
 set -e
 
 # Function to print formatted messages with green bold arrow and bold text
