@@ -24,7 +24,7 @@ print_msg "Starting bootstrap for {{ .chezmoi.os }}..."
 # Arch Linux specific packages
 if type "pacman" >/dev/null 2>&1; then
     print_msg "Installing Arch Linux packages..."
-    sudo pacman -S --needed base-devel fd fzf git github-cli go htop btop lazygit neovim nodejs npm fish python ripgrep starship tmux unzip uv yazi zoxide zellij vivid ghostty-terminfo gum lsd git-delta
+    sudo pacman -S --needed base-devel fd fzf git github-cli go htop btop lazygit neovim nodejs npm fish python ripgrep starship tmux unzip uv yazi zoxide zellij vivid ghostty-terminfo gum lsd git-delta sd
 
     # Install yay if not present
     if ! type "yay" >/dev/null 2>&1; then
@@ -56,7 +56,7 @@ fi
 # Install packages via Homebrew
 if type "brew" >/dev/null 2>&1; then
     print_msg "Installing Homebrew packages..."
-    brew install git-delta btop npm yazi starship fzf neovim zellij fd ripgrep gh lazygit gum zoxide fish lsd go node chezmoi opencode
+    brew install git-delta btop npm yazi starship fzf neovim zellij fd ripgrep gh lazygit gum zoxide fish lsd go node chezmoi opencode sd
     brew tap go-task/tap
     brew install go-task
 fi
