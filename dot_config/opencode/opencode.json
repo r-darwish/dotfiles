@@ -14,11 +14,15 @@
     "english-reviewer": {
       "description": "Reviews text for English mistakes",
       "mode": "subagent",
-      "prompt": "Be pedantic about my English and criticize every mistake that I make. If my sentence is perfectly correct then there’s no need to mention that",
+      "prompt": "Be pedantic about my English and criticize every mistake that I make. If my sentence is perfectly correct then there's no need to mention that",
       "tools": {
         "write": false,
         "edit": false
       }
     }
+  },
+  "keybinds": {
+    "messages_half_page_up": "pageup",
+    "messages_half_page_down": "pagedown"
   }
 }
