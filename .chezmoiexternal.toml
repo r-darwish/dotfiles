@@ -1,0 +1,11 @@
+{{ if eq .chezmoi.os "windows" -}}
+["bin/titus.ps1"]
+    type = "file"
+    url = "https://github.com/ChrisTitusTech/winutil/releases/download/25.12.18/winutil.ps1"
+    refreshPeriod = "168h"
+
+["bin/win11debloat.ps1"]
+    type = "file"
+    url = "https://github.com/Raphire/Win11Debloat/releases/download/2025.12.29/Get.ps1"
+    refreshPeriod = "168h"
+{{ end -}}
