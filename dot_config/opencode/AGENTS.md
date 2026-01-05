@@ -11,3 +11,5 @@
 - Use `rg` instead of `grep`
 - Use `fd` instead of `find`
 - Use `sd` instead of `sed`
+- grep-ast (`sg`) is available for use
+- `yq` is available for use for interacting with YAML files
