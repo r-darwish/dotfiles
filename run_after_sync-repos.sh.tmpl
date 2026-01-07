@@ -48,6 +48,9 @@ if [[ -d "$HOME/wiz-sec" ]]; then
     sync_repo "https://github.com/wiz-sec/darwish" "$HOME/wiz-sec/darwish"
     sync_repo "https://github.com/wiz-sec/dotfiles" "$HOME/wiz-sec/dotfiles"
     sync_repo "https://github.com/wiz-sec/vscode-workspace" "$HOME/wiz-sec/vscode-workspace"
+
+    print_sub_msg "Syncing opencode config..."
+    rsync -av --update "$HOME/wiz-sec/darwish/opencode/" "$HOME/.config/opencode/"
 fi
 
 print_msg "Repository sync complete!"
