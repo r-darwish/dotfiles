@@ -12,6 +12,7 @@
 - Do not comment in GitHub on my behalf
 - Do not open a pull request unless explicitly told to do that, even if I asked you to push a branch
 - Use the @code-reviewer sub-agent to review your work after completing a significant task.
+- Use `-q` in Git operations that support this flag to save tokens
 
 ## Tools
 
