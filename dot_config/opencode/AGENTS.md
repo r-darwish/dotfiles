@@ -13,7 +13,7 @@
 - Do not open a pull request unless explicitly told to do that, even if I asked you to push a branch
 - Use the @code-reviewer sub-agent to review your work after completing a significant task.
 - Use `-q` in Git operations that support this flag to save tokens
-- **ALWAYS end your response with a `<tldr></tldr>` section.**
+- **ALWAYS end your response with a TLDR markdown section.**
   The section **MUST** contain a few concise bullet points that:
   - Summarize the bottom-line answer.
   - Call out important changes, decisions, or conclusions.
