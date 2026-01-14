@@ -11,8 +11,8 @@
   - Keep main context lean
 - Do not comment in GitHub on my behalf
 - Do not open a pull request unless explicitly told to do that, even if I asked you to push a branch
-- Use the @code-reviewer sub-agent to review your work after completing a significant task.
 - Use `-q` in Git operations that support this flag to save tokens
+- Use `GIT_EDITOR=true` when rebasing to avoid opening an editor
 - **ALWAYS end your response with a TLDR markdown section.**
   The section **MUST** contain a few concise bullet points that:
   - Summarize the bottom-line answer.
@@ -24,5 +24,3 @@
 - Use `rg` instead of `grep`
 - Use `fd` instead of `find`
 - Use `sd` instead of `sed`
-- grep-ast (`sg`) is available for use
-- `yq` is available for use for interacting with YAML files
