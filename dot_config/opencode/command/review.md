@@ -3,4 +3,4 @@ description: Perform code review
 agent: code-reviewer
 ---
 
-Please perform a code review
+Use the code-review skill to review
